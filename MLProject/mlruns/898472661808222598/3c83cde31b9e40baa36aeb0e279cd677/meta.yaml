@@ -1,0 +1,14 @@
+artifact_uri: /home/runner/work/Workflow-CI/Workflow-CI/MLProject/mlruns/898472661808222598/3c83cde31b9e40baa36aeb0e279cd677/artifacts
+end_time: 1765842964983
+entry_point_name: ''
+experiment_id: '898472661808222598'
+lifecycle_stage: active
+run_id: 3c83cde31b9e40baa36aeb0e279cd677
+run_name: capable-gull-332
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1765842962098
+status: 3
+tags: []
+user_id: runner
