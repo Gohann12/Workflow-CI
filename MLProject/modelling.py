@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import joblib
 
 import mlflow
 import mlflow.sklearn
@@ -63,3 +64,10 @@ with mlflow.start_run():
 
     print("Training dan evaluasi selesai.")
 
+    # 5. Simpan model ke artifacts
+    os.makedirs("artifacts", exist_ok=True)
+    
+    model_path = "artifacts/model_clustering.pkl"
+    joblib.dump(model, model_path)
+    
+    print(f"Model disimpan di {model_path}")
