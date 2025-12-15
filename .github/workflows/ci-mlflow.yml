@@ -34,8 +34,6 @@ jobs:
       run: |
         cp MLProject/bank_transactions_data_preprocessing/bank_transactions_preprocessed.csv MLProject/
 
-
-
     - name: Run modelling
       shell: bash -l {0}
       run: |
@@ -45,9 +43,9 @@ jobs:
 
     - name: Commit model artifact
       run: |
+        git config --global user.email "github-actions@github.com"
         git config --global user.name "github-actions"
-        git config --global user.email "actions@github.com"
-
-        git add MLProject/artifacts/
-        git diff --cached --quiet || git commit -m "Add trained model artifact (CI)"
+        git add artifacts/
+        git diff --cached --quiet || git commit -m "Add trained model artifact"
         git push
+
