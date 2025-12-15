@@ -30,10 +30,11 @@ jobs:
         environment-file: MLProject/conda.yaml
         auto-activate-base: false
 
-    - name: Run modelling script
+    - name: Run modelling
+      shell: bash -l {0}
       run: |
-        cd MLProject
-        python modelling.py
+          conda activate mlflow-env
+          python modelling.py
 
     - name: Commit model artifact
       run: |
