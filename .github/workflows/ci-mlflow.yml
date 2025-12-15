@@ -28,12 +28,15 @@ jobs:
       run: conda --version
 
     - name: Install MLflow
-      run: pip install mlflow
-
-    - name: Run mlflow project
+      shell: bash -l {0}
       run: |
-        mlflow run MLProject --env-manager=conda
+        conda install -y -c conda-forge mlflow
 
+    - name: Run MLflow Project
+      shell: bash -l {0}
+      run: |
+        mlflow run MLProject
+        
     - name: Commit model artifact
       run: |
         git config user.name "github-actions"
