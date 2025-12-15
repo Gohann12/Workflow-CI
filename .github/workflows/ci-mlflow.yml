@@ -32,7 +32,8 @@ jobs:
 
     - name: Copy preprocessed dataset to MLProject
       run: |
-        cp MLProject/bank_transactions_data_preprocessing/bank_transactions_preprocessed.csv
+        cp MLProject/bank_transactions_data_preprocessing/bank_transactions_preprocessed.csv MLProject/
+
 
 
     - name: Run modelling
