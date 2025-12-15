@@ -10,42 +10,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # 1️⃣ Set up job
     - name: Set up job
       run: echo "Start CI job"
 
-    # 2️⃣ Checkout
     - name: Run actions/checkout@v3
       uses: actions/checkout@v3
 
-    # 3️⃣ Set up Python (boleh tetap ADA)
-    - name: Set up Python 3.12.7
-      uses: actions/setup-python@v4
+    - name: Install Miniconda
+      uses: conda-incubator/setup-miniconda@v3
       with:
-        python-version: "3.12.7"
+        auto-update-conda: true
+        python-version: 3.10
+        activate-environment: base
 
-    # 4️⃣ Check Env
-    - name: Check Env
-      run: python --version
+    - name: Check Conda
+      run: conda --version
 
-    # 5️⃣ Install dependencies (HANYA mlflow)
-    - name: Install dependencies
+    - name: Install MLflow
       run: pip install mlflow
 
-    # 6️⃣ Set MLflow Tracking URI
-    - name: Set MLflow Tracking URI
-      run: echo "MLFLOW_TRACKING_URI=local (MLProject mode)"
-
-    # 7️⃣ Run mlflow project (INI KUNCI)
     - name: Run mlflow project
       run: |
         mlflow run MLProject --env-manager=conda
 
-    # 8️⃣ Install Python dependencies (POST STEP – boleh kosong / echo)
-    - name: Install Python dependencies
-      run: echo "Handled by conda.yaml via MLflow Project"
-
-    # 9️⃣ Upload artifact → DIGANTI COMMIT KE GITHUB
     - name: Commit model artifact
       run: |
         git config user.name "github-actions"
@@ -54,13 +41,5 @@ jobs:
         git commit -m "Add trained model artifact" || echo "No changes"
         git push
 
-    # 🔟 Post steps
-    - name: Post Run actions/checkout@v3
-      run: echo "Post checkout"
-
-    - name: Post Set up Python 3.12.7
-      run: echo "Post python setup"
-
-    # 1️⃣1️⃣ Complete job
     - name: Complete job
       run: echo "CI finished successfully"
