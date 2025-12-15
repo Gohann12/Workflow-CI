@@ -19,9 +19,10 @@ jobs:
     - name: Install Miniconda
       uses: conda-incubator/setup-miniconda@v3
       with:
-        auto-update-conda: true
-        python-version: 3.10
-        activate-environment: base
+        auto-update-conda: false
+        activate-environment: mlflow-env
+        environment-file: MLProject/conda.yaml
+        auto-activate-base: false
 
     - name: Check Conda
       run: conda --version
