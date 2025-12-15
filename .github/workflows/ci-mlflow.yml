@@ -41,6 +41,10 @@ jobs:
           cd MLProject
           python modelling.py
 
+    - name: Ensure artifacts directory exists
+      run: |
+        mkdir -p artifacts
+
     - name: Commit model artifact
       run: |
         git config --global user.email "github-actions@github.com"
