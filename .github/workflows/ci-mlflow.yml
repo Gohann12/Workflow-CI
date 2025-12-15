@@ -34,6 +34,7 @@ jobs:
       shell: bash -l {0}
       run: |
           conda activate mlflow-env
+          cd MLProject
           python modelling.py
 
     - name: Commit model artifact
