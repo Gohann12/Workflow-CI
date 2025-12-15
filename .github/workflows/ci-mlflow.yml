@@ -1,51 +1,46 @@
-name: CI MLflow Training
+name: train-model
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
   workflow_dispatch:
-
-permissions:
-  contents: write
 
 jobs:
   train-model:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+    - name: Set up job
+      run: echo "Start CI job"
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
+    - name: Run actions/checkout@v3
+      uses: actions/checkout@v3
+
+    - name: Set up Python 3.12.7
+      uses: actions/setup-python@v4
       with:
-        python-version: "3.10"
+        python-version: "3.12.7"
 
-    - name: Install Miniconda
-      uses: conda-incubator/setup-miniconda@v3
-      with:
-        auto-update-conda: false
-        activate-environment: mlflow-env
-        environment-file: MLProject/conda.yaml
-        auto-activate-base: false
+    - name: Check Env
+      run: python --version
 
-    - name: Copy preprocessed dataset to MLProject
+    - name: Install dependencies
+      run: pip install mlflow scikit-learn pandas
+
+    - name: Set MLflow Tracking URI
+      run: echo "MLFLOW_TRACKING_URI not used (CI mode)"
+
+    - name: Run mlflow project
       run: |
-        cp MLProject/bank_transactions_data_preprocessing/bank_transactions_preprocessed.csv MLProject/
-
-    - name: Run modelling
-      shell: bash -l {0}
-      run: |
-          conda activate mlflow-env
-          cd MLProject
-          python modelling.py
-
+        mlflow run MLProject
 
     - name: Commit model artifact
       run: |
-        git config --global user.email "github-actions@github.com"
-        git config --global user.name "github-actions"
-        git add MLProject/artifacts/
-        git diff --cached --quiet || git commit -m "Add trained model artifact (CI)"
+        git config user.name "github-actions"
+        git config user.email "actions@github.com"
+        git add artifacts/
+        git commit -m "Add trained model artifact" || echo "No changes"
         git push
+
+    - name: Complete job
+      run: echo "CI finished successfully"
