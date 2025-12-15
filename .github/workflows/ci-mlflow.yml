@@ -41,15 +41,11 @@ jobs:
           cd MLProject
           python modelling.py
 
-    - name: Ensure artifacts directory exists
-      run: |
-        mkdir -p artifacts
 
     - name: Commit model artifact
       run: |
         git config --global user.email "github-actions@github.com"
         git config --global user.name "github-actions"
-        git add artifacts/
-        git diff --cached --quiet || git commit -m "Add trained model artifact"
+        git add MLProject/artifacts/
+        git diff --cached --quiet || git commit -m "Add trained model artifact (CI)"
         git push
-
