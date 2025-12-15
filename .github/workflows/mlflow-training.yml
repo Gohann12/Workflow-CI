@@ -38,7 +38,7 @@ jobs:
       - name: Run mlflow project
         run: |
           cd MLProject
-          mlflow run . --no-conda
+          python modelling.py --n_clusters 3 --random_state 42
 
       - name: Install Python dependencies
         run: pip install python-dateutil
@@ -76,7 +76,7 @@ jobs:
         if: always()
         run: echo "Cleanup Python setup"
 
-      - name: Post Run actions/checkout@v3
+      - name: Post Run actions/checkout@v4
         if: always()
         run: echo "Cleanup checkout"
 
