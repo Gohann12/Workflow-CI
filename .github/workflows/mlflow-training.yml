@@ -52,11 +52,11 @@ jobs:
         run: |
           cd MLProject
           if [ -d "mlruns" ]; then
-            echo "✅ MLflow artifacts created successfully"
-            echo "📊 Artifact size:"
+            echo "MLflow artifacts created successfully"
+            echo "Artifact size:"
             du -sh mlruns/
           else
-            echo "⚠️ MLflow artifacts not found"
+            echo "MLflow artifacts not found"
             exit 1
           fi
 
@@ -76,9 +76,9 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "🤖 Update MLflow artifacts [skip ci]"
+            git commit -m "Update MLflow artifacts"
             git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
           fi
 
       - name: Complete job
-        run: echo "✅ Training workflow completed successfully"
+        run: echo "Training workflow completed successfully"
