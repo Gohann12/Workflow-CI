@@ -20,41 +20,43 @@ jobs:
       - name: Set up job
         uses: actions/checkout@v4
 
-      - name: Set up Python 3.12.7
-        uses: actions/setup-python@v4
+      - name: Install Miniconda
+        uses: conda-incubator/setup-miniconda@v3
         with:
+          auto-update-conda: true
           python-version: '3.10'
+          activate-environment: mlflow-env
+          environment-file: MLProject/conda.yaml
+          auto-activate-base: false
 
       - name: Check Env
+        shell: bash -el {0}
         run: |
+          conda info
+          conda list
           python --version
           pip --version
 
-      - name: Install dependencies
-        uses: conda-incubator/setup-miniconda@v3
-        with:
-          environment-file: MLProject/conda.yaml
-
       - name: Set MLflow Tracking URI
+        shell: bash -el {0}
         run: echo "MLFLOW_TRACKING_URI=./mlruns" >> $GITHUB_ENV
 
       - name: Run mlflow project
+        shell: bash -el {0}
         run: |
           cd MLProject
           python modelling.py --n_clusters 3 --random_state 42
 
-      - name: Install Python dependencies
-        run: pip install python-dateutil
-
       - name: Verify MLflow Artifacts
+        shell: bash -el {0}
         run: |
           cd MLProject
           if [ -d "mlruns" ]; then
-            echo "MLflow artifacts created successfully"
-            echo "Artifact size:"
+            echo "✅ MLflow artifacts created successfully"
+            echo "📊 Artifact size:"
             du -sh mlruns/
           else
-            echo "MLflow artifacts not found"
+            echo "⚠️ MLflow artifacts not found"
             exit 1
           fi
 
@@ -66,22 +68,17 @@ jobs:
           retention-days: 30
 
       - name: Commit and Push MLflow Results
+        shell: bash -el {0}
         run: |
-          git config --global user.name "GitHub Actions Bot"
-          git config --global user.email "actions@github.com"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add -f MLProject/mlruns/
-          git diff --staged --quiet || git commit -m "Update MLflow artifacts"
-          git push origin main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Post Set up Python 3.12.7
-        if: always()
-        run: echo "Cleanup Python setup"
-
-      - name: Post Run actions/checkout@v4
-        if: always()
-        run: echo "Cleanup checkout"
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "🤖 Update MLflow artifacts [skip ci]"
+            git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
+          fi
 
       - name: Complete job
-        run: echo "Training workflow completed successfully"
+        run: echo "✅ Training workflow completed successfully"
