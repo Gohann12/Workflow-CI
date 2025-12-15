@@ -1,29 +1,80 @@
+import os
+import argparse
 import pandas as pd
+
 import mlflow
 import mlflow.sklearn
+
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
+from yellowbrick.cluster import KElbowVisualizer
 
 
-# MLflow Project otomatis membuat run
-mlflow.set_experiment("clustering-experiment")
+def main(n_clusters, random_state):
+    # Konfigurasi MLflow
+    mlflow.set_tracking_uri(os.getenv("MLFLOW_TRACKING_URI", "./mlruns"))
+    mlflow.set_experiment("clustering-experiment")
 
-# Load dataset (HARUS ADA DI FOLDER MLProject)
-data = pd.read_csv("bank_transactions_preprocessed.csv")
-data_numeric = data.select_dtypes(include=["int64", "float64"])
+    # Aktifkan AUTOLOG
+    mlflow.sklearn.autolog()
 
-# Training
-model = KMeans(n_clusters=3, random_state=42)
-labels = model.fit_predict(data_numeric)
+    with mlflow.start_run():
 
-# Evaluasi
-sil_score = silhouette_score(data_numeric, labels)
+        # 1. Load dataset preprocessing
+        data = pd.read_csv("bank_transactions_preprocessed.csv")
 
-# Logging (INI BOLEH)
-mlflow.log_param("n_clusters", 3)
-mlflow.log_metric("silhouette_score", sil_score)
+        print("\n=== DATA PREVIEW ===")
+        print(data.head())
 
-# Simpan model (INI WAJIB UNTUK NILAI)
-mlflow.sklearn.log_model(model, artifact_path="model")
+        print("\n=== DATA INFO ===")
+        print(data.info())
 
-print("MLflow Project training selesai")
+        print("\n=== DATA SUMMARY ===")
+        print(data.describe())
+
+        
+        # 2. Elbow Method (Analisis)
+        
+        data_numeric = data.select_dtypes(include=["int64", "float64"])
+
+        elbow = KElbowVisualizer(
+            KMeans(random_state=random_state),
+            k=(2, 10),
+            metric="silhouette",
+            timings=False
+        )
+        elbow.fit(data_numeric)
+
+        
+        # 3. Training Model
+        
+        model = KMeans(
+            n_clusters=n_clusters,
+            random_state=random_state
+        )
+
+        labels = model.fit_predict(data_numeric)
+
+        
+        # 4. Evaluasi (Silhouette Score)
+        
+        sil_score = silhouette_score(data_numeric, labels)
+        print(f"\nSilhouette Score: {sil_score}")
+
+        # Manual logging
+        mlflow.log_metric("silhouette_score", sil_score)
+        mlflow.log_param("n_clusters", n_clusters)
+        mlflow.log_param("random_state", random_state)
+
+        print("\n✅ Training dan evaluasi selesai.")
+        print(f"📊 Silhouette Score: {sil_score:.4f}")
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Clustering Bank Transactions")
+    parser.add_argument("--n_clusters", type=int, default=3, help="Number of clusters")
+    parser.add_argument("--random_state", type=int, default=42, help="Random state")
+    
+    args = parser.parse_args()
+    
+    main(args.n_clusters, args.random_state)
