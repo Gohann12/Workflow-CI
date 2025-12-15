@@ -15,9 +15,6 @@ def main(n_clusters, random_state):
     mlflow.set_tracking_uri(os.getenv("MLFLOW_TRACKING_URI", "./mlruns"))
     mlflow.set_experiment("clustering-experiment")
 
-    # Aktifkan AUTOLOG
-    mlflow.sklearn.autolog()
-
     with mlflow.start_run():
 
         # 1. Load dataset preprocessing
@@ -33,10 +30,13 @@ def main(n_clusters, random_state):
         print(data.describe())
 
         
-        # 2. Elbow Method (Analisis)
+        # 2. Elbow Method (Analisis) - TANPA AUTOLOG
         
         data_numeric = data.select_dtypes(include=["int64", "float64"])
 
+        # Matikan autolog sementara untuk elbow analysis
+        mlflow.sklearn.autolog(disable=True)
+        
         elbow = KElbowVisualizer(
             KMeans(random_state=random_state),
             k=(2, 10),
@@ -44,6 +44,9 @@ def main(n_clusters, random_state):
             timings=False
         )
         elbow.fit(data_numeric)
+        
+        # Aktifkan autolog lagi untuk model training
+        mlflow.sklearn.autolog(log_models=True, log_input_examples=True)
 
         
         # 3. Training Model
@@ -61,10 +64,8 @@ def main(n_clusters, random_state):
         sil_score = silhouette_score(data_numeric, labels)
         print(f"\nSilhouette Score: {sil_score}")
 
-        # Manual logging
+        # Manual logging (hanya metric, params sudah di-handle autolog)
         mlflow.log_metric("silhouette_score", sil_score)
-        mlflow.log_param("n_clusters", n_clusters)
-        mlflow.log_param("random_state", random_state)
 
         print("\n✅ Training dan evaluasi selesai.")
         print(f"📊 Silhouette Score: {sil_score:.4f}")
