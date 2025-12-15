@@ -47,15 +47,15 @@ jobs:
       - name: Install Python dependencies
         run: pip install python-dateutil
 
-      - name: Upload to Google Drive
+      - name: Verify MLflow Artifacts
         run: |
           cd MLProject
           if [ -d "mlruns" ]; then
-            echo "✅ MLflow artifacts created successfully"
-            echo "📊 Artifact size:"
+            echo "MLflow artifacts created successfully"
+            echo "Artifact size:"
             du -sh mlruns/
           else
-            echo "⚠️ MLflow artifacts not found"
+            echo "MLflow artifacts not found"
             exit 1
           fi
 
@@ -71,7 +71,7 @@ jobs:
           git config --global user.name "GitHub Actions Bot"
           git config --global user.email "actions@github.com"
           git add -f MLProject/mlruns/
-          git diff --staged --quiet || git commit -m "🤖 Update MLflow artifacts [skip ci]"
+          git diff --staged --quiet || git commit -m "Update MLflow artifacts"
           git push origin main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -85,4 +85,4 @@ jobs:
         run: echo "Cleanup checkout"
 
       - name: Complete job
-        run: echo "✅ Training workflow completed successfully"
+        run: echo "Training workflow completed successfully"
