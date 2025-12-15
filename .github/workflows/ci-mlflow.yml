@@ -30,6 +30,11 @@ jobs:
         environment-file: MLProject/conda.yaml
         auto-activate-base: false
 
+    - name: Copy preprocessed dataset to MLProject
+      run: |
+        cp preprocessing/bank_transactions_data_preprocessing/bank_transactions_preprocessed.csv MLProject/
+
+
     - name: Run modelling
       shell: bash -l {0}
       run: |
