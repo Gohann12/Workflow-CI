@@ -10,9 +10,6 @@ from yellowbrick.cluster import KElbowVisualizer
 
 
 # Konfigurasi MLflow (local)
-mlflow.set_tracking_uri(
-    "file:///D:/Dicoding/Machine Learning/Membangun Sistem Machine Learning/mlruns"
-)
 mlflow.set_experiment("clustering-experiment")
 
 # Aktifkan AUTOLOG
@@ -65,3 +62,4 @@ with mlflow.start_run():
     mlflow.log_metric("silhouette_score", sil_score)
 
     print("Training dan evaluasi selesai.")
+
