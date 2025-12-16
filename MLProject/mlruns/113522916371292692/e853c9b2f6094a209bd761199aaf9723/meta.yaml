@@ -1,0 +1,14 @@
+artifact_uri: /home/runner/work/Workflow-CI/Workflow-CI/MLProject/mlruns/113522916371292692/e853c9b2f6094a209bd761199aaf9723/artifacts
+end_time: 1765843842103
+entry_point_name: ''
+experiment_id: '113522916371292692'
+lifecycle_stage: active
+run_id: e853c9b2f6094a209bd761199aaf9723
+run_name: bustling-squid-102
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1765843839330
+status: 3
+tags: []
+user_id: runner
