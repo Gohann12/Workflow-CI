@@ -1,0 +1,14 @@
+artifact_uri: /home/runner/work/Workflow-CI/Workflow-CI/MLProject/mlruns/113522916371292692/2c3423252921438cb71d0ef17c471337/artifacts
+end_time: 1765844312531
+entry_point_name: ''
+experiment_id: '113522916371292692'
+lifecycle_stage: active
+run_id: 2c3423252921438cb71d0ef17c471337
+run_name: delicate-crane-305
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1765844309648
+status: 3
+tags: []
+user_id: runner
