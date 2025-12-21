@@ -54,7 +54,7 @@ jobs:
       - name: Run mlflow project
         shell: bash -el {0}
         run: |
-          mlflow run MLProject --env-manager=local
+          mlflow run MLProject --env-manager=local --experiment-name=clustering-experiment
       
       - name: Get latest MLflow run_id
         shell: bash -el {0}
