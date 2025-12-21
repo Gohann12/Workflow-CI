@@ -16,6 +16,8 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE
@@ -102,8 +104,8 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Update MLflow artifacts"
-            git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
+            git commit -m "Update MLflow artifacts [skip ci]"
+            git push
           fi
       
       - name: Complete job
