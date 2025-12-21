@@ -1,0 +1,6 @@
+artifact_location: file:///home/runner/work/Workflow-CI/Workflow-CI/mlruns/876867505235378245
+creation_time: 1766312695185
+experiment_id: '876867505235378245'
+last_update_time: 1766312695185
+lifecycle_stage: active
+name: clustering-experiment
