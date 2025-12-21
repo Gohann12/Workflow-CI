@@ -21,32 +21,45 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE
       - uses: actions/checkout@v3
       
-      - name: Set up Python 3.12.7
-        uses: actions/setup-python@v4
+      - name: Install Miniconda
+        uses: conda-incubator/setup-miniconda@v3
         with:
-          python-version: "3.12.7"
+          auto-update-conda: true
+          python-version: '3.10'
+          activate-environment: mlflow-env
+          environment-file: MLProject/conda.yaml
+          auto-activate-base: false
       
       - name: Check Env
+        shell: bash -el {0}
         run: |
+          conda info
+          conda list
+          python --version
+          pip --version
           echo $CSV_URL
           echo $TARGET_VAR
       
       - name: Install dependencies
+        shell: bash -el {0}
         run: |
           python -m pip install --upgrade pip
           pip install mlflow
       
       - name: Run mlflow project
+        shell: bash -el {0}
         run: |
           mlflow run MLProject --env-manager=local
       
       - name: Get latest MLflow run_id
+        shell: bash -el {0}
         run: |
           RUN_ID=$(ls -td mlruns/0/*/ | head -n 1 | cut -d'/' -f3)
           echo "RUN_ID=$RUN_ID" >> $GITHUB_ENV
           echo "Latest run_id: $RUN_ID"
       
       - name: Verify MLflow Artifacts
+        shell: bash -el {0}
         run: |
           if [ -d "mlruns" ]; then
             echo "MLflow artifacts created successfully"
